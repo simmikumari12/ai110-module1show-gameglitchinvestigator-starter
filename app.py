@@ -34,6 +34,7 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+        # FIXME: Hint direction logic was reversed (HIGHER/LOWER mismatch)
         if guess > secret:
             return "Too High", "📈 Go LOWER!"
         else:
@@ -43,6 +44,7 @@ def check_guess(guess, secret):
         if g == secret:
             return "Win", "🎉 Correct!"
         if g > secret:
+            # FIXME: Hint direction logic was reversed (HIGHER/LOWER mismatch)
             return "Too High", "📈 Go LOWER!"
         return "Too Low", "📉 Go HIGHER!"
 
@@ -60,6 +62,7 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
         return current_score - 5
 
     if outcome == "Too Low":
+        # FIXME: Score always decreases and can go negative without limit
         return max(0, current_score - 5)
 
     return current_score
@@ -92,6 +95,7 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
+# FIXME: Attempts should start at 0, starting at 1 causes mismatch in UI
 if "attempts" not in st.session_state:
     st.session_state.attempts = 0
 
@@ -131,6 +135,7 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+# FIXME: New game does not reset score, history, or status properly
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(low, high)
@@ -156,6 +161,7 @@ if submit:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
+        # FIXME: History format is unclear and not user-friendly
         st.session_state.history.append(f"Attempt {st.session_state.attempts}: {guess_int}")
 
         secret = st.session_state.secret
